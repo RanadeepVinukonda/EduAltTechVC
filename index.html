@@ -1053,7 +1053,7 @@
     return valid;
   }
 
-  // Submit form data
+  // Submit form data via hidden iframe (most reliable for Google Forms)
   function handleSubmit(e) {
     e.preventDefault();
     
@@ -1063,30 +1063,43 @@
     const btnText = document.getElementById('btnText');
     const cc = document.getElementById('countryCode').value;
 
-    // Loading State
     submitBtn.disabled = true;
     submitBtn.classList.add('submitting');
     btnText.textContent = 'Sending...';
 
-    const data = new URLSearchParams();
-    data.append(FIELD_MAP.name, document.getElementById('name').value.trim());
-    data.append(FIELD_MAP.email, document.getElementById('email').value.trim());
-    data.append(FIELD_MAP.phone, cc + ' ' + document.getElementById('phone').value.trim());
-    data.append(FIELD_MAP.service, selected.filter(s => s.type === 'service').map(s => s.label).join(', '));
-    data.append(FIELD_MAP.course, selected.filter(s => s.type === 'course').map(s => s.label).join(', '));
-    data.append(FIELD_MAP.message, document.getElementById('message').value.trim());
+    const iframe = document.createElement('iframe');
+    iframe.name = 'gform_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
 
-    fetch(FORM_URL, { 
-      method: 'POST', 
-      mode: 'no-cors', 
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: data 
-    })
-    .then(() => showSuccess())
-    .catch(() => showSuccess());
-    
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = FORM_URL;
+    form.target = 'gform_iframe';
+
+    const fields = [
+      [FIELD_MAP.name, document.getElementById('name').value.trim()],
+      [FIELD_MAP.email, document.getElementById('email').value.trim()],
+      [FIELD_MAP.phone, cc + ' ' + document.getElementById('phone').value.trim()],
+      [FIELD_MAP.service, selected.filter(s => s.type === 'service').map(s => s.label).join(', ')],
+      [FIELD_MAP.course, selected.filter(s => s.type === 'course').map(s => s.label).join(', ')],
+      [FIELD_MAP.message, document.getElementById('message').value.trim()]
+    ];
+
+    fields.forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    setTimeout(() => document.body.removeChild(iframe), 5000);
+
+    showSuccess();
     return false;
   }
 
