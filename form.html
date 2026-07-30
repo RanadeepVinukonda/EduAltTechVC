@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - EduAltTech</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafb;
+      color: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 24px rgba(0,0,0,.04);
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .logo-row img { width: 32px; height: 32px; border-radius: 8px; }
+    .logo-row .name { font-size: 16px; font-weight: 700; color: #003C5A; }
+    .logo-row .tagline { font-size: 9px; font-weight: 600; color: #008F3F; text-transform: uppercase; letter-spacing: 1px; display: block; }
+
+    h1 { font-size: 20px; margin-bottom: 4px; color: #003C5A; }
+    .sub { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
+
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #374151; }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color .2s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #008F3F; box-shadow: 0 0 0 3px rgba(0,143,63,.1); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .phone-row { display: flex; gap: 8px; }
+    .cc-wrapper { flex: 0 0 85px; position: relative; }
+    .cc-wrapper select {
+      width: 100%;
+      padding: 10px 24px 10px 10px;
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .cc-arrow {
+      position: absolute;
+      right: 6px;
+      top: 21px;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-size: 18px;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+    .cc-wrapper select:focus ~ .cc-arrow {
+      color: #008F3F;
+    }
+    .phone-row input { flex: 1; }
+
+    .field-error {
+      display: block; font-size: 12px; font-weight: 600; color: #dc2626; margin-top: 3px; min-height: 16px;
+    }
+    .error input, .error select { border-color: #dc2626; background: #fef2f2; }
+
+    button {
+      width: 100%;
+      padding: 11px;
+      background: #008F3F;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    button:hover { background: #00a848; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+
+    .success { display: none; text-align: center; padding: 40px 0; }
+    .success h2 { color: #008F3F; margin-bottom: 6px; }
+    .success p { color: #6b7280; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <img src="logo.png" alt="EduAltTech">
+      <div>
+        <span class="name">EduAltTech</span>
+        <span class="tagline">Education Technology Partner</span>
+      </div>
+    </div>
+
+    <div class="success" id="success">
+      <h2>Submitted</h2>
+      <p>We'll be in touch shortly.</p>
+    </div>
+
+    <form id="customerForm" onsubmit="return handleSubmit(event)" novalidate>
+      <h1>Contact Us</h1>
+      <p class="sub">Fill in your details and we'll get back to you.</p>
+
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required>
+        <span class="field-error" id="nameError"></span>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+        <span class="field-error" id="emailError"></span>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <div class="phone-row">
+          <div class="cc-wrapper">
+            <select id="countryCode">
+              <option value="+91">+91</option>
+              <option value="+1">+1</option>
+              <option value="+44">+44</option>
+              <option value="+61">+61</option>
+              <option value="+65">+65</option>
+              <option value="+971">+971</option>
+              <option value="+81">+81</option>
+              <option value="+86">+86</option>
+              <option value="+49">+49</option>
+              <option value="+33">+33</option>
+            </select>
+            <span class="material-symbols-outlined cc-arrow">expand_more</span>
+          </div>
+          <input type="tel" id="phone" placeholder="10-digit number" maxlength="10" required oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+        <span class="field-error" id="phoneError"></span>
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message"></textarea>
+      </div>
+
+      <button type="submit" id="submitBtn">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const FORM_ID = '1FAIpQLScvxbWaUNH_2oFqeB61Kd5XKP_cIUpIa7PeuuRwmezK9QZCjA';
+    const FORM_URL = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
+    const FIELD_MAP = {
+      name: 'entry.1846571779',
+      email: 'entry.635610999',
+      phone: 'entry.171821259',
+      message: 'entry.677879111'
+    };
+
+    function validateName(v) { if (!v.trim()) return 'Full name is required'; if (/\d/.test(v)) return 'Name cannot contain numbers'; if (v.trim().length < 2) return 'Name is too short'; return ''; }
+    function validateEmail(v) { if (!v.trim()) return 'Email is required'; if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Enter a valid email address'; return ''; }
+    function validatePhone(v) { if (!v.trim()) return 'Phone number is required'; if (!/^\d{10}$/.test(v)) return 'Enter a valid 10-digit number'; return ''; }
+
+    function clearErrors() {
+      document.querySelectorAll('.error').forEach(w => w.classList.remove('error'));
+      ['nameError','emailError','phoneError'].forEach(id => document.getElementById(id).textContent = '');
+    }
+
+    function validateForm() {
+      clearErrors();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      let valid = true;
+
+      const ne = validateName(name);
+      if (ne) { document.getElementById('nameError').textContent = ne; document.getElementById('name').closest('.form-group').classList.add('error'); valid = false; }
+
+      const ee = validateEmail(email);
+      if (ee) { document.getElementById('emailError').textContent = ee; document.getElementById('email').closest('.form-group').classList.add('error'); valid = false; }
+
+      const pe = validatePhone(phone);
+      if (pe) { document.getElementById('phoneError').textContent = pe; document.getElementById('phone').closest('.form-group').classList.add('error'); valid = false; }
+
+      return valid;
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      if (!validateForm()) return false;
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true; btn.textContent = 'Submitting...';
+
+      const data = new URLSearchParams();
+      data.append(FIELD_MAP.name, document.getElementById('name').value.trim());
+      data.append(FIELD_MAP.email, document.getElementById('email').value.trim());
+      data.append(FIELD_MAP.phone, document.getElementById('countryCode').value + ' ' + document.getElementById('phone').value.trim());
+      data.append(FIELD_MAP.message, document.getElementById('message').value.trim());
+
+      fetch(FORM_URL, { method: 'POST', mode: 'no-cors', body: data })
+        .then(() => showSuccess())
+        .catch(() => showSuccess());
+      return false;
+    }
+
+    function showSuccess() {
+      document.getElementById('customerForm').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
